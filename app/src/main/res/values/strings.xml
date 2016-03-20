@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My AppliMenu</string>
+    <string name="refresh">refresh</string>
+    <string name="send">send</string>
+    <string name="fragment_text">фрагмент</string>
+    <string name="setting">setting</string>
+
+</resources>
