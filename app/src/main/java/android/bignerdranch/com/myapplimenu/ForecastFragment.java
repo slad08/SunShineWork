@@ -137,6 +137,7 @@ public class ForecastFragment extends Fragment {
                 if (buff.length()==0){
                     return null;
                 }
+                //dfsdfsdfsd
                 forecastJsonStr = buff.toString();
                 Log.i(Log_Tag_Too,"Результат запроса  +" + forecastJsonStr);
             }
