@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,11 +31,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Denis on 19.03.2016.
  */
 public class ForecastFragment extends Fragment {
+    private ArrayAdapter<String> adapter;
+
     public ForecastFragment(){
 
     }
@@ -69,25 +75,22 @@ public class ForecastFragment extends Fragment {
                 "Fri-Foggy-60/44",
                 "Sat-Sunny-77/65"
         };
-
+        List<String> weekForecast = new ArrayList<String>(Arrays.asList(sunList));
 
         View rootView =inflater.inflate(R.layout.fragm_with_menu,container,false);
 
         TextView textvv = (TextView)rootView.findViewById(R.id.list_item_forecast_textview);
 
-        ImageView imgview =(ImageView)rootView.findViewById(R.id.imageView);
+//        ImageView imgview =(ImageView)rootView.findViewById(R.id.imageView);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity()
+        adapter = new ArrayAdapter<String>(getActivity()
                 ,R.layout.list_item_forecast
                 ,R.id.list_item_forecast_textview
-                ,sunList);
+                ,weekForecast);
 
 
         ListView list =(ListView)rootView.findViewById(R.id.list_view_for_cast);
-
         list.setAdapter(adapter);
-
-
 
         return rootView;
     }
@@ -180,12 +183,15 @@ public class ForecastFragment extends Fragment {
             int numDays = 7;
             try {
 
+              //  final String FORECAST_BASE_URL =
+               //         "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&units=metric&cnt=7&APPID=fc98f6f48ac0446ca20c391650c87479";
                 final String FORECAST_BASE_URL =
-                        "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&units=metric&cnt=7&APPID=fc98f6f48ac0446ca20c391650c87479";
+                        "http://api.openweathermap.org/data/2.5/forecast/daily?APPID=fc98f6f48ac0446ca20c391650c87479";
                 final String QUERY_PARAM = "q";
                 final String FORMAT_PARAM = "mode";
                 final String UNITS_PARAM = "units";
                 final String DAYS_PARAM ="cnt";
+
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM,params[0])
@@ -243,6 +249,15 @@ public class ForecastFragment extends Fragment {
             return null;
         }
 
+        @Override
+        protected void onPostExecute(String[] resul) {
+            if (resul !=null){
+                adapter.clear();
+                for (String dayForecastStr : resul){
+                    adapter.add(dayForecastStr);
+                }
+            }//Новые данные возвращаются с сервера
+        }
     }
 
 }

@@ -11,12 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left|top"
         >
-     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:background="@mipmap/ic_launcher"
-           />
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -25,11 +20,6 @@
             android:textSize="20dp"
             android:text="Today-Synny-86/30"
            android:layout_weight="1"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/send"
-            android:id="@+id/btnSend"
-           />
+
     </LinearLayout>
 </FrameLayout>
