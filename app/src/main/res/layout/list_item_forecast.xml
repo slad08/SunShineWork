@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:id="@+id/list_item_forecast_textview"
             android:gravity="center_vertical|center_horizontal"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:text="Today-Synny-86/30"
            android:layout_weight="1"/>
 
