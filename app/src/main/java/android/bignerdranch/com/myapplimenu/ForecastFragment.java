@@ -15,6 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.text.format.Time;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +28,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import java.text.SimpleDateFormat;
 
 /**
  * Created by Denis on 19.03.2016.
@@ -84,11 +92,81 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
+    public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
         private final String Log_Tag_Too = "JSON_RESULT";
+        private final String Log_Tag_JSON = "RESULT_PARSE_JSON";
+
+        /*Код конвертации даты/времени
+        * */
+
+        private  String getReadableDateString(long time){
+            //т.к. API возвращает ЮНИКС временную метку в секундах, это должно быть конвертировано в милиссекунды
+            SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
+            return shortenedDateFormat.format(time);
+        }
+        //Подготавливаетм погоду Высок/Низкую для представления (Округляем температуру)
+        private String formatHighLows(double hight, double low){
+            //Для представления , предполагаем пользователь не беспокоится о десятых градуса
+            long roundedHigh = Math.round(hight);
+            long roundedLow= Math.round(low);
+            String highLowStr = roundedHigh + "/" +roundedHigh;
+            return highLowStr;
+        }
+        // Возвращаем прогноз JSON строку в массив прогнозов
+        private  String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
+            throws JSONException{
+            //Там имена JSON объектов, которые нужно извлечь
+            final String OWN_LIST = "list";
+            final String OWN_WEATHER = "weather";
+            final  String OWN_TEMPERATURE = "temp";
+            final String OWN_MAX = "max";
+            final String OWN_MIN = "min";
+            final String OWN_DESCRIPTION = "main";
+
+            JSONObject forecastJson = new JSONObject(forecastJsonStr);
+            JSONArray weaatherArray = forecastJson.getJSONArray(OWN_LIST);
+
+            Time dayTime = new Time();
+            dayTime.setToNow();
+            
+            int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
+
+            dayTime = new Time();
+
+            String[] resultStrs = new String[numDays];
+            for (int i=0; i<weaatherArray.length();i++){
+                // Сейчас, используем формат "Day, description, hi/low"
+                String day;
+                String description;
+                String highAndLow;
+
+                //Get the JSON object representing the day
+                JSONObject dayForecast = weaatherArray.getJSONObject(i);
+                //Date/Time возвращ-ся в формте long/. Дам нужно конвертировать это в
+                //человеко читаемый формат, чтобы человек мог прочитать "1400356800" как "this saturday"
+                long dateTime;
+                dateTime = dayTime.setJulianDay(julianStartDay+i);
+                day = getReadableDateString(dateTime);
+
+                JSONObject weatherObject = dayForecast.getJSONArray(OWN_WEATHER).getJSONObject(0);
+                description = weatherObject.getString(OWN_DESCRIPTION);
+
+                JSONObject temperatureObject = dayForecast.getJSONObject(OWN_TEMPERATURE);
+                double high = temperatureObject.getDouble(OWN_MAX);
+                double low = temperatureObject.getDouble(OWN_MIN);
+
+                highAndLow = formatHighLows(high, low);
+                resultStrs[i] = day + " - "+description + " - " + highAndLow;
+            }
+            for (String s:resultStrs){
+                Log.v(Log_Tag_JSON,"Forecast entry: "+ s);
+            }
+            return resultStrs;
+        }
+
         @Override
-        protected Void doInBackground(String... params) {
+        protected String[] doInBackground(String... params) {
 
             if (params.length ==0){
               return null;
@@ -155,6 +233,12 @@ public class ForecastFragment extends Fragment {
                         Log.e(LOG_TAG,"Error closing stream", e);
                     }
                 }
+            }
+            try {
+                return getWeatherDataFromJson(forecastJsonStr, numDays);
+            }catch (JSONException e){
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
             }
             return null;
         }
