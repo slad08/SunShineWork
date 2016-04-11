@@ -12,11 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.text.format.Time;
+import android.widget.Toast;
 
 
 import org.json.JSONArray;
@@ -67,7 +70,7 @@ public class ForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String[] sunList={
+        final String[] sunList={
                 "Today-Sunny-80/65",
                 "Tomorrow-Foggy-70/45",
                 "Weds-Cloudly-72/66",
@@ -75,11 +78,11 @@ public class ForecastFragment extends Fragment {
                 "Fri-Foggy-60/44",
                 "Sat-Sunny-77/65"
         };
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(sunList));
+        final List<String> weekForecast = new ArrayList<String>(Arrays.asList(sunList));
 
         View rootView =inflater.inflate(R.layout.fragm_with_menu,container,false);
 
-        TextView textvv = (TextView)rootView.findViewById(R.id.list_item_forecast_textview);
+        final TextView textvv = (TextView)rootView.findViewById(R.id.list_item_forecast_textview);
 
 //        ImageView imgview =(ImageView)rootView.findViewById(R.id.imageView);
 
@@ -91,6 +94,14 @@ public class ForecastFragment extends Fragment {
 
         ListView list =(ListView)rootView.findViewById(R.id.list_view_for_cast);
         list.setAdapter(adapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               String forecast = adapter.getItem(position);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), forecast, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
 
         return rootView;
     }
