@@ -4,5 +4,7 @@
     <string name="send">send</string>
     <string name="fragment_text">фрагмент</string>
     <string name="setting">setting</string>
-
+    <string name="DetalView">detalView</string>
+    <string name="hello_word">hello_word</string>
+    <string name="title_activity_name">DetailActivity</string>
 </resources>
