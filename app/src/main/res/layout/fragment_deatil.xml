@@ -10,7 +10,6 @@
     <TextView
         android:text="@string/hello_word"
         android:id="@+id/text_deatil"
-        android:gravity="center_horizontal|center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </RelativeLayout>

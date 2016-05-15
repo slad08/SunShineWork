@@ -62,7 +62,9 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.act_refre){
             FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute("94043");
+          // weatherTask.execute("625665");//Могилев
+            weatherTask.execute("625144");//MInsk
+
 
             return true;
         }
