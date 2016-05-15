@@ -1,6 +1,7 @@
 package android.bignerdranch.com.myapplimenu;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -98,8 +99,12 @@ public class ForecastFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                String forecast = adapter.getItem(position);
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), forecast, Toast.LENGTH_SHORT);
-                toast.show();
+               // Toast toast = Toast.makeText(getActivity().getApplicationContext(), forecast, Toast.LENGTH_SHORT);
+               // toast.show();
+            Intent intent = new Intent(getActivity(),DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT,forecast);
+                startActivity(intent);
+
             }
         });
 
