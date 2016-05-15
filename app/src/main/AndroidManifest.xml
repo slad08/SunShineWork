@@ -17,8 +17,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity android:name=".DetailActivity"
-            android:label="@string/DetalView"
+            android:label="@string/title_activity_detail"
             android:parentActivityName=".MainActivity"
             >
             <meta-data
