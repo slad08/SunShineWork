@@ -5,6 +5,6 @@
     <string name="fragment_text">фрагмент</string>
     <string name="setting">setting</string>
     <string name="DetalView">detalView</string>
-    <string name="hello_word">hello_word</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="title_activity_detail">DetailActivity</string>
 </resources>
